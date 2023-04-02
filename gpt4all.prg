@@ -3,7 +3,7 @@
 
 function Main()
 
-   local dummy := QOut( "GPT4All running..." )
+   local dummy := QOut( "GPT4All running..." + CPUSpeed() )
    local oAI := GPT4All():New()
 
    oAI:Read()
@@ -83,7 +83,7 @@ METHOD Read() CLASS GPT4All
    end  
 
    ::Log( "after read" )
-   _d( "after read" )
+   dbWin( "after read" )
 
 return
 
@@ -117,9 +117,9 @@ return nil
 
 function RemoveANSIEscapeCodes( cString )
 
-   local cCleanString := "", n
+   local cCleanString := "", n, nLen := Len( cString )
 
-   for n := 1 TO Len( cString )
+   for n := 1 TO nLen
       cChar := SubStr( cString, n, 1 )
       if cChar == Chr( 27 )
          while cChar != "m"
@@ -134,5 +134,10 @@ function RemoveANSIEscapeCodes( cString )
 
 return cCleanString
 
-function _d( u )
+function dbwin( u )
 retu WAPI_OutputDebugString( chr(10) + chr(13) + u )
+
+function CPUSpeed()
+
+return Str( win_regRead( "HKLM\HARDWARE\DESCRIPTION\System\CentralProcessor\0\~MHz" ) )
+
