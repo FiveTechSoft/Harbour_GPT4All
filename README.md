@@ -1,5 +1,9 @@
 # Harbour_GPT4All
 
+GPT4All is the most advanced free and open source AI engine actually: 
+
+https://github.com/nomic-ai/gpt4all
+
 You may check if there is a more recent gpt4all-lora-quantized-win64.exe here:
 
 https://github.com/nomic-ai/gpt4all/blob/main/chat/gpt4all-lora-quantized-win64.exe
