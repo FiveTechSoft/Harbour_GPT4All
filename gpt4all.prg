@@ -3,7 +3,7 @@
 
 function Main()
 
-   local dummy := QOut( "GPT4All running..." + CPUSpeed() )
+   local dummy := QOut( "GPT4All running... cpu speed: " + AllTrim( CPUSpeed() ) )
    local oAI := GPT4All():New()
 
    oAI:Read()
