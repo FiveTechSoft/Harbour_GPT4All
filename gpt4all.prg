@@ -50,25 +50,36 @@ return Self
 
 METHOD Read() CLASS GPT4All
 
-   local nTotal := 0, nReaded := 1, cBuffer, cResult, nTries
+   local nReaded := 0, cBuffer, cResult, nTries, lExit := .F.
 
    cBuffer = "x"
 
-   while nReaded > 0
-      cBuffer = Space( BUFFER_SIZE )
-      nReaded = 0
-      nTries = 0
-      while ( nReaded += hb_PRead( ::hStdOut, @cBuffer, BUFFER_SIZE, 1000 ) ) == 0
-         if ++nTries > 5
-            exit
-         endif  
-      end
+   while ! lExit
+      if ! Empty( cBuffer )
+         cBuffer = Space( BUFFER_SIZE )
+         if nReaded > 0 .and. ( nReaded := hb_PRead( ::hStdOut, @cBuffer, BUFFER_SIZE, 1000 ) ) == 0
+            lExit = .T.
+            exit 
+         endif
 
-      ?? RemoveANSIEscapeCodes( SubStr( cBuffer, 1, nReaded ) )
-      ::Log( SubStr( cBuffer, 1, nReaded ) )
+         if nReaded == 0
+            nTries = 0
+            while ( nReaded += hb_PRead( ::hStdOut, @cBuffer, BUFFER_SIZE, 1000 ) ) == 0
+               if ++nTries > 5
+                  exit
+               endif
+            end
+         endif
+      endif
+
+      if nReaded > 0 
+         ?? RemoveANSIEscapeCodes( SubStr( cBuffer, 1, nReaded ) )
+         ::Log( SubStr( cBuffer, 1, nReaded ) )
+      endif   
    end  
 
    ::Log( "after read" )
+   _d( "after read" )
 
 return
 
@@ -118,3 +129,6 @@ function RemoveANSIEscapeCodes( cString )
    next
 
 return cCleanString
+
+function _d( u )
+retu WAPI_OutputDebugString( chr(10) + chr(13) + u )
