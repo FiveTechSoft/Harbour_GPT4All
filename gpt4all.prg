@@ -11,6 +11,10 @@ function Main()
    oAI:Write( "Tell me a zen advise" )
    ?
    oAI:Read()
+   ?? "what is love ?" 
+   oAI:Write( "what is love ?" )
+   ? 
+   oAI:Read()
 
    oAI:End()
 
