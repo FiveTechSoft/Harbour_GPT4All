@@ -1,8 +1,15 @@
 # Harbour_GPT4All
 
+You may check if there is a more recent gpt4all-lora-quantized-win64.exe here:
+
+https://github.com/nomic-ai/gpt4all/blob/main/chat/gpt4all-lora-quantized-win64.exe
+
 You have to download the BIN (data) file from here:
 
 https://the-eye.eu/public/AI/models/nomic-ai/gpt4all/gpt4all-lora-quantized.bin
+
+first of all please download the above files and run the EXE to check that it works on your computer. In case if does not work,
+you may need to rebuild the EXE using different flags using this repo https://github.com/zanussbaum/gpt4all.cpp
 
 chatGPT and similars have taken the computing world by storm. Actually there are two ways to have that power from your apps:
 
