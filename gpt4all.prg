@@ -3,7 +3,7 @@
 
 function Main()
 
-   local dummy := QOut( "GPT4All running... cpu speed: " + AllTrim( CPUSpeed() ),;
+   local dummy := QOut( "Loading GPT4All... cpu speed: " + AllTrim( CPUSpeed() ),;
                         If( ! CpuHasAvx2(), "not", "" ) + " AVX2 support" )
    local oAI := GPT4All():New()
 
@@ -55,38 +55,63 @@ return Self
 
 METHOD Read() CLASS GPT4All
 
-   local nReaded := 0, cBuffer, cResult, nTries, lExit := .F.
+	local nReaded 	:= 1
+	local nTries	:= 0
+	local cBuffer 	:= Space( BUFFER_SIZE )
+	local cText 	:= ''
+	local aEsc, cCode, nPos, nEscLen	
+	
 
-   cBuffer = "x"
+	while ( nReaded := hb_PRead( ::hStdOut, @cBuffer, BUFFER_SIZE, 1000 ) ) == 0
+      if ++nTries > 15 			
+         exit
+      endif 				 
+   end
+	  
+	cBuffer = Substr( cBuffer, 1, nReaded )		
+	aEsc = hb_ATokens( AllTrim( cBuffer ), Chr( 27 ) )								
+		
+   nEscLen = Len( aEsc )
 
-   while ! lExit
-      if ! Empty( cBuffer )
-         cBuffer = Space( BUFFER_SIZE )
-         if nReaded > 0 .and. ( nReaded := hb_PRead( ::hStdOut, @cBuffer, BUFFER_SIZE, 1000 ) ) == 0
-            lExit = .T.
-            exit 
-         endif
+   switch( nEscLen )   
+      case 1	//	Only Text
+         cText = cBuffer
+      
+      case 2 	//	1 code Escape										
+         cText = GetEscapeCode( cBuffer, .F. )
 
-         if nReaded == 0
-            nTries = 0
-            while ( nReaded += hb_PRead( ::hStdOut, @cBuffer, BUFFER_SIZE, 1000 ) ) == 0
-               if ++nTries > 5
+      case 4	//	4 code Escape. Instruction Set				
+         //	Check is instruction set...
+         if getEscapeCode( aEsc[2] ) == '1' .and. ;
+            getEscapeCode( aEsc[4] ) == '0' 
+            cText := getEscapeCode( aEsc[ 4 ], .F. )
+            ?? cText
+            
+            cBuffer = Space( BUFFER_SIZE )
+            nTries  = 0
+            
+            while ( nReaded := hb_PRead( ::hStdOut, @cBuffer, BUFFER_SIZE, 1000 ) ) > 0
+               if ++nTries > 15 						
                   exit
+               endif 				 						 						 
+            
+               if At( chr( 27 ), cBuffer  ) == 0
+                  ?? Substr( cBuffer, 1, nReaded )
+               else
+                  ?? GetEscapeCode( Substr( cBuffer, 1, nReaded ), .F. )
                endif
-            end
-         endif
-      endif
-
-      if nReaded > 0 
-         ?? RemoveANSIEscapeCodes( SubStr( cBuffer, 1, nReaded ) )
-         ::Log( SubStr( cBuffer, 1, nReaded ) )
-      endif   
-   end  
-
-   ::Log( "after read" )
-   dbWin( "after read" )
-
-return
+               
+               cBuffer = Space( BUFFER_SIZE )
+               nTries  = 0
+            end					  					  
+               
+            return nil										
+         endif					
+   end 
+         
+   ?? cText   
+	
+return nil 
 
 METHOD End() CLASS GPT4All
 
@@ -116,24 +141,35 @@ METHOD Log( cMsg ) CLASS GPT4All
 
 return nil  
 
-function RemoveANSIEscapeCodes( cString )
+//	lCode == .t., return escape code
+//	lCode == .f., return text after escape code
+//	ex: esc[0mHello
 
-   local cCleanString := "", n, nLen := Len( cString )
+function GetEscapeCode( u, lCode )
 
-   for n := 1 TO nLen
-      cChar := SubStr( cString, n, 1 )
-      if cChar == Chr( 27 )
-         while cChar != "m"
-            n++
-            cChar = SubStr( cString, n, 1 )
-         end      
-         cChar = ""
-      endif  
-
-      cCleanString := cCleanString + cChar
-   next
-
-return cCleanString
+	local n := 0, cCode_Tmp := '', cCode := '', cChar, nPos
+	
+	hb_default( @lCode, .T. )
+	
+	if ( nPos := At( '[', u ) ) > 0
+		cCode_Tmp = SubStr( u, nPos+1 )					
+		cChar 	 = ''
+		
+		while cChar != "m" .and. Len( cCode_Tmp ) > n
+			n++
+			cChar = SubStr( cCode_Tmp, n, 1 )
+		end 
+		 
+		if cChar == 'm' 
+			if lCode
+				cCode := SubStr( cCode_Tmp, 1, n - 1 )			
+			else 
+				cCode := SubStr( cCode_Tmp, n + 1 )			
+			endif
+		endif				 
+	endif 
+	
+return cCode
 
 function dbwin( u )
 retu WAPI_OutputDebugString( chr(10) + chr(13) + u )
