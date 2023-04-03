@@ -69,20 +69,20 @@ return cText
 
 METHOD Read() CLASS GPT4All
 
-	local nReaded 	:= 1
-	local nTries	:= 0
-	local cBuffer 	:= Space( BUFFER_SIZE )
-	local cText 	:= ''
-	local aEsc, cCode, nPos, nEscLen	
+   local nReaded := 1
+   local nTries	:= 0
+   local cBuffer := Space( BUFFER_SIZE )
+   local cText 	:= ''
+   local aEsc, cCode, nPos, nEscLen	
 
-	while ( nReaded := hb_PRead( ::hStdOut, @cBuffer, BUFFER_SIZE, 1000 ) ) == 0
+   while ( nReaded := hb_PRead( ::hStdOut, @cBuffer, BUFFER_SIZE, 1000 ) ) == 0
       if ++nTries > 15 			
          exit
       endif 				 
    end
 	  
-	cBuffer = Substr( cBuffer, 1, nReaded )		
-	aEsc = hb_ATokens( AllTrim( cBuffer ), Chr( 27 ) )								
+   cBuffer = Substr( cBuffer, 1, nReaded )		
+   aEsc = hb_ATokens( AllTrim( cBuffer ), Chr( 27 ) )								
 		
    nEscLen = Len( aEsc )
 
