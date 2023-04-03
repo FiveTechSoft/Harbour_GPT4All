@@ -12,8 +12,13 @@ You have to download the BIN (data) file from here:
 
 https://the-eye.eu/public/AI/models/nomic-ai/gpt4all/gpt4all-lora-quantized.bin
 
-first of all please download the above files and run the EXE to check that it works on your computer. In case if does not work,
-you may need to rebuild the EXE using different flags using this repo https://github.com/zanussbaum/gpt4all.cpp
+first of all please download the above files and run the EXE to check that it works on your computer. 
+
+If the PC CPU does not have AVX and AVX2 support, gpt4all-lora-quantized-win64.exe will not work. To check if your CPU supports them use this tool HWiNFO: 
+
+https://www.hwinfo.com/download/
+
+It seems that GPT4ALL forces AVX2 set of CPU instructions even if they are not supported by the CPU. To fix this you need to build GPT4ALL by yourself from this repo https://github.com/zanussbaum/gpt4all.cpp. Prior to building change the lines 86, 87, 88 in the file CMakeLists.txt from AVX2 to AVX.
 
 chatGPT and similars have taken the computing world by storm. Actually there are two ways to have that power from your apps:
 
@@ -29,7 +34,3 @@ SQL, emails, etc. and provide such info the free AI, running locally, without ha
 In case that you modify the source code for improving it, testing, etc. if your computer turns very slow, do this from a cmd window:
 
 taskkill /f /im gpt4all-lora-quantized-win64.exe
-
-If the PC CPU does not have AVX and AVX2 support, gpt4all-lora-quantized-win64.exe will not work. To check if your CPU supports them use this tool HWiNFO: 
-
-https://www.hwinfo.com/download/
