@@ -14,7 +14,7 @@ https://the-eye.eu/public/AI/models/nomic-ai/gpt4all/gpt4all-lora-quantized.bin
 
 first of all please download the above files and run the EXE to check that it works on your computer. 
 
-If the PC CPU does not have AVX and AVX2 support, gpt4all-lora-quantized-win64.exe will not work. To check if your CPU supports them use this tool HWiNFO: 
+If the PC CPU does not have AVX2 support, gpt4all-lora-quantized-win64.exe will not work. To check if your CPU supports them use this tool HWiNFO: 
 
 https://www.hwinfo.com/download/
 
