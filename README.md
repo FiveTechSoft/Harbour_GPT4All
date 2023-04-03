@@ -30,3 +30,6 @@ In case that you modify the source code for improving it, testing, etc. if your 
 
 taskkill /f /im gpt4all-lora-quantized-win64.exe
 
+If the PC CPU does not have AVX and AVX2 support, gpt4all-lora-quantized-win64.exe will not work. To check if your CPU supports them use this tool HWiNFO: 
+
+https://www.hwinfo.com/download/
