@@ -104,7 +104,7 @@ METHOD Read() CLASS GPT4All
          if getEscapeCode( aEsc[2] ) == '1' .and. ;
             getEscapeCode( aEsc[4] ) == '0' 
             cText := getEscapeCode( aEsc[ 4 ], .F. )
-            ?? cText
+            ?? hb_utf8ToStr( cText )
             
             cBuffer = Space( BUFFER_SIZE )
             nTries  = 0
@@ -115,9 +115,9 @@ METHOD Read() CLASS GPT4All
                endif 				 						 						 
             
                if At( chr( 27 ), cBuffer  ) == 0
-                  ?? Substr( cBuffer, 1, nReaded )
+                  ?? hb_utf8ToStr( Substr( cBuffer, 1, nReaded ) )
                else
-                  ?? GetEscapeCode( Substr( cBuffer, 1, nReaded ), .F. )
+                  ?? hb_utf8ToStr(GetEscapeCode( Substr( cBuffer, 1, nReaded ), .F. ) )
                endif
                
                cBuffer = Space( BUFFER_SIZE )
@@ -128,7 +128,7 @@ METHOD Read() CLASS GPT4All
          endif					
    end 
          
-   ?? cText   
+   ?? hb_utf8ToStr( cText )   
 	
 return nil 
 
