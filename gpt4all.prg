@@ -3,7 +3,8 @@
 
 function Main()
 
-   local dummy := QOut( "GPT4All running... cpu speed: " + AllTrim( CPUSpeed() ) )
+   local dummy := QOut( "GPT4All running... cpu speed: " + AllTrim( CPUSpeed() ),;
+                        If( ! CpuHasAvx2(), "not", "" ) + " AVX2 support" )
    local oAI := GPT4All():New()
 
    oAI:Read()
@@ -140,4 +141,19 @@ retu WAPI_OutputDebugString( chr(10) + chr(13) + u )
 function CPUSpeed()
 
 return Str( win_regRead( "HKLM\HARDWARE\DESCRIPTION\System\CentralProcessor\0\~MHz" ) )
+
+#pragma BEGINDUMP
+
+#include <hbapi.h>
+#include <immintrin.h>
+
+HB_FUNC( CPUHASAVX2 )
+{
+   int cpuInfo[ 4 ];
+   __cpuid( cpuInfo, 0 );
+
+    hb_retl( cpuInfo[ 2 ] & ( 1 << 5 ) );
+}
+
+#pragma ENDDUMP
 
