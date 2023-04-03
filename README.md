@@ -33,3 +33,33 @@ SQL, emails, etc. and provide such info the free AI, running locally, without ha
 In case that you modify the source code for improving it, testing, etc. if your computer turns very slow, do this from a cmd window:
 
 taskkill /f /im gpt4all-lora-quantized-win64.exe
+
+Run gpt4all-lora-quantized-win64.exe ? to see all the possible options:
+
+```
+usage: gpt4all-lora-quantized-win64.exe [options]
+
+options:
+  -h, --help            show this help message and exit
+  -i, --interactive     run in interactive mode
+  --interactive-start   run in interactive mode and poll user input at startup
+  -r PROMPT, --reverse-prompt PROMPT
+                        in interactive mode, poll user input upon seeing PROMPT
+  --color               colorise output to distinguish prompt and user input from generations
+  -s SEED, --seed SEED  RNG seed (default: -1)
+  -t N, --threads N     number of threads to use during computation (default: 4)
+  -p PROMPT, --prompt PROMPT
+                        prompt to start generation with (default: random)
+  -f FNAME, --file FNAME
+                        prompt file to start generation.
+  -n N, --n_predict N   number of tokens to predict (default: 128)
+  --top_k N             top-k sampling (default: 40)
+  --top_p N             top-p sampling (default: 0.9)
+  --repeat_last_n N     last n tokens to consider for penalize (default: 64)
+  --repeat_penalty N    penalize repeat sequence of tokens (default: 1.3)
+  -c N, --ctx_size N    size of the prompt context (default: 2048)
+  --temp N              temperature (default: 0.1)
+  -b N, --batch_size N  batch size for prompt processing (default: 8)
+  -m FNAME, --model FNAME
+                        model path (default: gpt4all-lora-quantized.bin)
+```
