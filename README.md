@@ -34,7 +34,7 @@ In case that you modify the source code for improving it, testing, etc. if your 
 
 taskkill /f /im gpt4all-lora-quantized-win64.exe
 
-Run gpt4all-lora-quantized-win64.exe ? to see all the possible options:
+Run gpt4all-lora-quantized-win64.exe -h to see all the possible options:
 
 ```
 usage: gpt4all-lora-quantized-win64.exe [options]
