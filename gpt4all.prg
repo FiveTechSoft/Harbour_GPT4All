@@ -4,18 +4,18 @@
 function Main()
 
    local dummy := QOut( "Loading GPT4All... cpu speed: " + AllTrim( CPUSpeed() ),;
-                        If( ! CpuHasAvx2(), "not", "" ) + " AVX2 support" )
-   local oAI := GPT4All():New()
+                        If( ! CpuHasAvx2(), "not", "" ) + " AVX2 support. Type exit to finish" )
+   local oAI := GPT4All():New(), cMsg
 
    oAI:Read()
-   ?? "Tell me a zen advise"
-   oAI:Write( "Tell me a zen advise" )
-   ?
-   oAI:Read()
-   ?? "what is love ?" 
-   oAI:Write( "what is love ?" )
-   ? 
-   oAI:Read()
+   while ! Empty( cMsg := oAI:Input() ) 
+      if cMsg != "exit"
+         oAI:Write( cMsg )
+         oAI:Read()
+      else
+         exit
+      end      
+   end   
 
    oAI:End()
 
@@ -30,6 +30,7 @@ CLASS GPT4All
    DATA   hStdIn, hStdOut, hStdErr
 
    METHOD New()
+   METHOD Input()
    METHOD Write( cText ) INLINE ::Log( "write: " + cText ), FWrite( ::hStdIn, cText + hb_eol() )
    METHOD Read()
    METHOD End()
@@ -53,6 +54,19 @@ METHOD New( cPrompt ) CLASS GPT4All
 
 return Self
 
+METHOD Input() CLASS GPT4All
+
+   local cText := "", nChar := 0
+
+   while nChar != 13
+      nChar = InKey( 0 )
+      ?? Chr( nChar )
+      cText += Chr( nChar )
+   end
+   ?
+
+return cText      
+
 METHOD Read() CLASS GPT4All
 
 	local nReaded 	:= 1
@@ -60,7 +74,6 @@ METHOD Read() CLASS GPT4All
 	local cBuffer 	:= Space( BUFFER_SIZE )
 	local cText 	:= ''
 	local aEsc, cCode, nPos, nEscLen	
-	
 
 	while ( nReaded := hb_PRead( ::hStdOut, @cBuffer, BUFFER_SIZE, 1000 ) ) == 0
       if ++nTries > 15 			
