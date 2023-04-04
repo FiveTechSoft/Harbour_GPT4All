@@ -4,7 +4,9 @@
 function Main()
 
    local dummy := QOut( "Loading GPT4All... cpu speed: " + AllTrim( CPUSpeed() ),;
-                        If( ! CpuHasAvx2(), "not", "" ) + " AVX2 support. Type exit to finish" )
+                        If( ! CpuHasAvx2(), "not", "" ) + " AVX2 support. " + ;
+                        "Total CPU threads: " + AllTrim( Str( CPUThreads() ) ) + ;
+                        ". Type exit to finish" )
    local oAI := GPT4All():New(), cMsg
 
    oAI:Read()
@@ -201,6 +203,7 @@ return Str( win_regRead( "HKLM\HARDWARE\DESCRIPTION\System\CentralProcessor\0\~M
 
 #include <hbapi.h>
 #include <immintrin.h>
+#include <Windows.h>
 
 HB_FUNC( CPUHASAVX2 )
 {
@@ -210,5 +213,12 @@ HB_FUNC( CPUHASAVX2 )
     hb_retl( cpuInfo[ 2 ] & ( 1 << 5 ) );
 }
 
-#pragma ENDDUMP
+HB_FUNC( CPUTHREADS )
+{
+   SYSTEM_INFO sysinfo;
+   GetSystemInfo( &sysinfo );
 
+   hb_retnl( sysinfo.dwNumberOfProcessors );
+}
+
+#pragma ENDDUMP
