@@ -11,7 +11,10 @@ function Main()
 
    oAI:Read()
    while ! Empty( cMsg := oAI:Input() ) 
-      if cMsg != "exit"
+      if cMsg == "bunch"
+         oAI:Write( Replicate( "xyz", 1024 ) + " tell me a zen advice" )
+         oAI:Read()
+      elseif cMsg != "exit"
          oAI:Write( cMsg )
          oAI:Read()
       else
