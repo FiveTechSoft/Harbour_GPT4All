@@ -13,6 +13,7 @@ You have to download the BIN (data) file from here:
 https://the-eye.eu/public/AI/models/nomic-ai/gpt4all/gpt4all-lora-quantized.bin
 
 first of all please download the above files and run the EXE to check that it works on your computer. 
+You need at least 6 gigs (better 8) of RAM and a CPU with AVX2 support, so the IA engine works fine.
 
 If the PC CPU does not have AVX2 support, gpt4all-lora-quantized-win64.exe will not work. gpt4all.prg checks
 if you have AVX2 support.
