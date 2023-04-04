@@ -62,7 +62,10 @@ METHOD Input() CLASS GPT4All
 
    while nChar != 13
       nChar = InKey( 0 )
-      if nChar == 8 //backspace
+      if nChar == 13
+         exit 
+      endif   
+      if nChar == 8 // backspace
          if ! Empty( cText )
             cText = SubStr( cText, 1, Len( cText ) - 1 )
          endif
